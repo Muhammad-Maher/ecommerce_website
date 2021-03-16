@@ -8,7 +8,7 @@ const schema = new Schema({
         required: true
     },
     productID: [{
-        type: schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Product'
     }],
     createdAt: {

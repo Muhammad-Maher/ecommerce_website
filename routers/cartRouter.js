@@ -9,3 +9,19 @@ const imgUploadCloud = require('../middelware/cloudinary');
 const User = require("../models/usersCollection");
 const Cart = require("../models/cartsCollection");
 const fs = require('fs');
+
+
+cartRouter.use(authentication)
+
+cartRouter.post("/add", async(req, res) => {
+
+    try {
+
+        const cart = await Cart.create()
+    } catch (error) {
+
+    }
+})
+
+
+module.exports = cartRouter
