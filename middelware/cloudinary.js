@@ -6,13 +6,14 @@ cloudinary.config({
     api_secret: process.env.CLOUD_SECRET
 })
 
-imgUploadCloud = async(req) => {
+imgUploadCloud = async(req, pahtInCloud) => {
 
     const imageName = await req.file.originalname.split(".")
     await imageName.pop()
     await imageName.join()
+    const uniqueSuffix = '-' + Date.now() + '-' + Math.round(Math.random() * 1E9);
 
-    return cloudinary.uploader.upload(req.file.path, { public_id: "store/users/" + imageName }, async(error, result) => {
+    return cloudinary.uploader.upload(req.file.path, { public_id: "store/" + pahtInCloud + imageName + uniqueSuffix, width: 100, height: 100, crop: "fill" }, async(error, result) => {
         try {
 
         } catch (error) {

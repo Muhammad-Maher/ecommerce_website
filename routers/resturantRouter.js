@@ -5,7 +5,7 @@ const ResturantRouter = new express.Router();
 const authentication = require('../middelware/authontication');
 const adminstration = require('../middelware/adminstration');
 const mangement = require('../middelware/mangement');
-
+const upload = require("../middelware/upload")
 
 ////////Base /api/resturant
 
@@ -30,16 +30,26 @@ ResturantRouter.use(mangement)
 
 ///Allowed for Admins only
 
-ResturantRouter.post('/:id', async(req, res) => {
+ResturantRouter.post('/', upload.single('avatar'), async(req, res) => {
     try {
+
+        const result = await imgUploadCloud(req, "/restaurants/");
+
+        try {
+            fs.unlinkSync(req.file.path)
+        } catch (err) {
+            console.error(err)
+        }
+
+        const img = result.url;
+
         const Name = req.body.Name;
-        const img = req.body.img;
         const address = req.body.address || "NaN";
         const Mobile = req.body.Mobile;
-        const BrandID = req.params.id;
+        const BrandID = req.body.BrandID;
         const worrkingHours = req.body.worrkingHours;
         const resturant = await Resturant.create({ Name, img, address, Mobile, BrandID, worrkingHours });
-        res.send(resturant);
+        res.json("resturant add successfully");
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
@@ -63,7 +73,7 @@ ResturantRouter.delete("/:id", async(req, res, next) => {
 
 })
 
-ResturantRouter.patch("/:id", async(req, res, next)=>{
+ResturantRouter.patch("/:id", async(req, res, next) => {
     try {
         const Name1 = req.body.Name;
         const img1 = req.body.img;

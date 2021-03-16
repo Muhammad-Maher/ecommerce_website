@@ -19,6 +19,7 @@ const schema = new Schema({
     },
     gender: {
         type: String,
+        enum: ["M", "F"]
     },
     fname: {
         type: String,

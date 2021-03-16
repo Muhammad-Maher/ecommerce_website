@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
 
-const schema = Schema({
+const schema = new Schema({
     Name: {
         type: String,
         required: true,
@@ -18,9 +18,9 @@ const schema = Schema({
         type: Number,
         required: true,
     },
-    BrandID: {
+    resturantID: {
         type: Schema.Types.ObjectId,
-        ref: 'Brand',
+        ref: 'Resturant',
         required: true
     }
 });

@@ -8,15 +8,16 @@ const mangement = require('../middelware/mangement');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
+const upload = require("../middelware/upload")
 
 ////////Base /api/brand
 
-brandRouter.use(authentication)
-    /////Allowed for all users
+// brandRouter.use(authentication)
+/////Allowed for all users
 brandRouter.get('/:id', async(req, res) => {
     try {
         const brand = await Brand.findOne({ _id: req.params.id }, { _id: 0 });
-        res.send(brand);
+        res.send("brand created successfully");
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
@@ -31,14 +32,23 @@ brandRouter.post('/',
     body('Name').isLength({ min: 3 })
     .withMessage('enter valide name with length more than 3'),
     body('mail').isEmail().withMessage('enter valide email'),
-    //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-    body("Password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/, "i").withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8 , max 20 char long'), adminstration, async(req, res) => {
+    upload.single('avatar'),
+    /*adminstration,*/
+    async(req, res) => {
         try {
+            const result = await imgUploadCloud(req, "/brands/");
 
-            const { Name, img, Description, contactNo, mail } = req.body;
+            try {
+                fs.unlinkSync(req.file.path)
+            } catch (err) {
+                console.error(err)
+            }
+            const img = result.url;
+
+            const { Name, Description, contactNo, mail } = req.body;
             const Password = await bcrypt.hash(req.body.Password, 10)
             const brand = await Brand.create({ Name, img, Description, contactNo, mail, Password });
-            res.send(brand)
+            res.json("brand craeted successfully");
         } catch (error) {
             res.statusCode = 422;
             res.send(error);

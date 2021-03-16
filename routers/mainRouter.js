@@ -1,5 +1,11 @@
 const express = require("express");
 const Product = require("../models/ProductCollection");
+
+const Cart = require("../models/cartsCollection");
+
+
+const Brand = require('../models/brandsCollection');
+
 const mainRouter = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
@@ -49,17 +55,13 @@ mainRouter.post('/register',
     body('username').isLength({ min: 3 })
     .withMessage('enter valide username with length more than 3'),
     body('mail').isEmail().withMessage('enter valide email'),
-    //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-    body("Password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/, "i").withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8 , max 20 char long'),
     upload.single('avatar'), async(req, res, next) => {
         try {
 
-
-
-            const result = await imgUploadCloud(req);
+            const result = await imgUploadCloud(req, "/users/");
 
             try {
-                fs.unlinkSync(req.file)
+                fs.unlinkSync(req.file.path)
             } catch (err) {
                 console.error(err)
             }
@@ -84,10 +86,9 @@ mainRouter.post('/register',
 mainRouter.post('/login',
     body('username').isLength({ min: 3 })
     .withMessage('enter valide username with length more than 3'),
-    //Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character
-    body("Password").matches(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/, "i").withMessage('Password should be combination of one uppercase , one lower case, one special char, one digit and min 8 , max 20 char long'),
     async(req, res, next) => {
         try {
+
 
             const { password, username } = req.body;
             const user = await User.findOne({ username }).exec();

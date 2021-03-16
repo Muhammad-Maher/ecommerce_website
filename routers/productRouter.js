@@ -4,7 +4,8 @@ const Product = require('../models/ProductCollection');
 const authentication = require('../middelware/authontication');
 const aminstration = require('../middelware/adminstration');
 const manage = require('../middelware/mangement');
-
+const upload = require('../middelware/upload');
+const fs = require('fs');
 
 ////////Base /api/product
 
@@ -39,15 +40,23 @@ productRouter.use(authentication)
 
 productRouter.use(manage)
     /////Allowed for Admins only
-productRouter.post('/:id', async(req, res) => {
+productRouter.post('/', upload.single("avatar"), async(req, res) => {
     try {
+
+        const result = await imgUploadCloud(req, "/products/");
+        try {
+            fs.unlinkSync(req.file.path)
+        } catch (err) {
+            console.error(err)
+        }
+        const img = result.url;
+
         const Name = req.body.Name;
-        const img = req.body.img;
         const status = req.body.status || "NaN";
         const Price = req.body.Price;
-        const BrandID = req.params.id;
-        const product = await Product.create({ Name, img, status, Price, BrandID });
-        res.send(product);
+        const resturantID = req.body.resturantID;
+        const product = await Product.create({ Name, img, status, Price, resturantID });
+        res.json("product created successfully");
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
