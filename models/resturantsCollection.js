@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
+const Brand = require('./brandsCollection')
 
 const schema = new Schema({
     Name: {
@@ -20,7 +21,7 @@ const schema = new Schema({
     },
     BrandID: {
         type: Schema.Types.ObjectId,
-        ref: 'Brand',
+        ref: Brand,
         required: true
     },
     worrkingHours: {
@@ -32,7 +33,8 @@ const schema = new Schema({
     locattion: {
         type: String
     }
+
 });
 
-const Resturant = mongoose.model('resturant', schema);
+const Resturant = mongoose.model('Resturant', schema);
 module.exports = Resturant;

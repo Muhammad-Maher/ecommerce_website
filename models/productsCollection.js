@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Resturant = require('./resturantsCollection')
 const Schema = mongoose.Schema
 
 const schema = new Schema({
@@ -20,10 +21,10 @@ const schema = new Schema({
     },
     resturantID: {
         type: Schema.Types.ObjectId,
-        ref: 'Resturant',
+        ref: Resturant,
         required: true
     }
 });
 
-const Product = mongoose.model('product', schema);
+const Product = mongoose.model('Product', schema);
 module.exports = Product;

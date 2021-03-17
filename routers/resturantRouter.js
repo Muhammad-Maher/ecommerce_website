@@ -1,6 +1,6 @@
 const express = require('express');
-const Product = require('../models/ProductCollection');
-const Resturant = require('../models/resturantCollection');
+const Product = require('../models/productsCollection');
+const Resturant = require('../models/resturantsCollection');
 const ResturantRouter = new express.Router();
 const authentication = require('../middelware/authontication');
 const adminstration = require('../middelware/adminstration');
@@ -19,7 +19,7 @@ ResturantRouter.use(authentication)
 /////GET THE IFO ABOUT RESTURANTS
 ResturantRouter.get('/:id', async(req, res) => {
     try {
-        const resturant = await Resturant.findOne({ _id: req.params.id });
+        const resturant = await Resturant.findOne({ _id: req.params.id }).populate('BrandID');
         res.send(resturant);
     } catch (error) {
         res.statusCode = 422;

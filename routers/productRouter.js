@@ -1,6 +1,6 @@
 const express = require('express');
 const productRouter = new express.Router();
-const Product = require('../models/ProductCollection');
+const Product = require('../models/productsCollection');
 const authentication = require('../middelware/authontication');
 const aminstration = require('../middelware/adminstration');
 const manage = require('../middelware/mangement');
@@ -14,7 +14,7 @@ const fs = require('fs');
 /**to get all products of brand=>id of the brand  */
 productRouter.get('/:id', async(req, res) => {
     try {
-        const products = await Product.find({ BrandID: req.params.id });
+        const products = await Product.find({ resturantID: req.params.id }).populate('resturantID');
         res.send(products);
     } catch (error) {
         res.statusCode = 422;
@@ -28,7 +28,7 @@ productRouter.get('/:id', async(req, res) => {
 /**to get one product of brand=>id of the brand and id of the product  */
 productRouter.get('/:id/:pid', async(req, res) => {
     try {
-        const products = await Product.findOne({ BrandID: req.params.id, _id: req.params.pid });
+        const products = await Product.findOne({ resturantID: req.params.id, _id: req.params.pid }).populate('resturantID');
         res.send(products);
     } catch (error) {
         res.statusCode = 422;
@@ -65,7 +65,7 @@ productRouter.post('/', upload.single("avatar"), async(req, res) => {
 
 productRouter.patch('/:id/:pid', async(req, res) => {
     try {
-        const product = await Product.findOne({ _id: req.params.pid })
+        const product = await Product.findOne({ _id: req.params.pid }).populate('resturantID')
         const Name1 = req.body.Name || product.Name;
         const img1 = req.body.img || product.img;
         const status1 = req.body.status || product.status || "NaN";

@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken');
 
 
 
-// cartRouter.use(authentication)
+cartRouter.use(authentication)
 
 cartRouter.post("/add", async(req, res) => {
     try {
@@ -31,7 +31,7 @@ cartRouter.post("/add", async(req, res) => {
 
 cartRouter.get('/get', async(req, res) => {
     try {
-        const cart = await Cart.findOne({ userID: req.body.userID });
+        const cart = await Cart.findOne({ userID: req.body.userID }).populate(['productID', 'userID']);
         res.send(cart);
     } catch (error) {
         res.statusCode = 422;

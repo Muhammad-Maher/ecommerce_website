@@ -1,15 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
+const Product = require('./productsCollection')
+const User = require('./usersCollection')
 
 const schema = new Schema({
     userID: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: User,
         required: true
     },
     productID: [{
         type: Schema.Types.ObjectId,
-        ref: 'Product'
+        ref: Product
     }],
 
     total: {
@@ -26,5 +28,5 @@ const schema = new Schema({
     },
 });
 
-const Order = mongoose.model('order', schema);
+const Order = mongoose.model('Order', schema);
 module.exports = Order;

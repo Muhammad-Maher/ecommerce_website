@@ -1,7 +1,7 @@
 const express = require('express');
 const brandRouter = new express.Router();
 const Brand = require('../models/brandsCollection');
-const Product = require('../models/ProductCollection');
+const Product = require('../models/productsCollection');
 const authentication = require('../middelware/authontication');
 const adminstration = require('../middelware/adminstration');
 const mangement = require('../middelware/mangement');
@@ -9,11 +9,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const upload = require("../middelware/upload")
+const fs = require('fs');
 
 ////////Base /api/brand
 
-// brandRouter.use(authentication)
-/////Allowed for all users
+brandRouter.use(authentication)
+    /////Allowed for all users
 brandRouter.get('/:id', async(req, res) => {
     try {
         const brand = await Brand.findOne({ _id: req.params.id }, { _id: 0 });
@@ -24,8 +25,8 @@ brandRouter.get('/:id', async(req, res) => {
     }
 })
 
-//brandRouter.use(aminstration)
-/////Allowed for Admins only
+brandRouter.use(adminstration)
+    /////Allowed for Admins only
 
 
 brandRouter.post('/',

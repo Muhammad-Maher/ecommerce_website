@@ -1,5 +1,6 @@
 const express = require("express");
-const Product = require("../models/ProductCollection");
+const Product = require("../models/productsCollection");
+const Resturant = require("../models/resturantsCollection");
 
 const Cart = require("../models/cartsCollection");
 
@@ -123,7 +124,7 @@ mainRouter.get('/order/all', async(req, res, next) => {
     try {
 
 
-        const allOrderes = await Product.find({}).populate('resturant')
+        const allOrderes = await Product.find({}).populate('resturantID')
             .exec((err, data) => {
                 res.json(data);
             })
@@ -141,7 +142,7 @@ mainRouter.get('/product/offers', async(req, res, next) => {
     try {
 
 
-        const allOffers = await Product.find({ "status": "sale" })
+        const allOffers = await Product.find({ "status": "sale" }).populate('resturantID')
             .exec((err, data) => {
                 res.json(data);
             })

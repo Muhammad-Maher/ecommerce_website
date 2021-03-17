@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-
+const Brand = require('./brandsCollection')
 const schema = new Schema({
     username: {
         type: String,
@@ -53,9 +53,9 @@ const schema = new Schema({
     },
     BrandID: {
         type: Schema.Types.ObjectId,
-        ref: 'Brand'
+        ref: Brand
     }
 });
 
-const User = mongoose.model('user', schema);
+const User = mongoose.model('User', schema);
 module.exports = User;

@@ -1,15 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema
-
+const Product = require('./productsCollection')
+const User = require('./usersCollection')
 const schema = new Schema({
     userID: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: User,
         required: true
     },
     productID: [{
         type: Schema.Types.ObjectId,
-        ref: 'Product'
+        ref: Product
     }],
     createdAt: {
         type: Date,
@@ -17,5 +18,5 @@ const schema = new Schema({
     },
 });
 
-const Cart = mongoose.model('cart', schema);
+const Cart = mongoose.model('Cart', schema);
 module.exports = Cart;
