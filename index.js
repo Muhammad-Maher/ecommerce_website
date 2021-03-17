@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 require("./db_connection");
 const app = express();
 const dotenv = require('dotenv');
@@ -15,6 +16,10 @@ const ResturantRouter = require('./routers/resturantRouter')
 const profileRouter = require('./routers/profileRouter')
 const cartRouter = require('./routers/cartRouter')
 
+
+
+
+app.use(cors())
 
 app.use(express.json());
 app.use(express.static('public'));
