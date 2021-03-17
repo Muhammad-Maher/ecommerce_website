@@ -65,10 +65,10 @@ mainRouter.post('/register',
             } catch (err) {
                 console.error(err)
             }
+            img = result.url;
 
             const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, status, BrandID } = req.body;
 
-            img = result.url;
             const hash = await bcrypt.hash(Password, 10);
             const user = await User.create({ username, Password: hash, mail, gender, fname, lname, Phone, governorater, Address, country, img, status, BrandID });
 
@@ -123,7 +123,7 @@ mainRouter.get('/order/all', async(req, res, next) => {
     try {
 
 
-        const allOrderes = await Product.find({})
+        const allOrderes = await Product.find({}).populate('resturant')
             .exec((err, data) => {
                 res.json(data);
             })
