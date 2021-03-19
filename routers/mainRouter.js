@@ -56,9 +56,10 @@ mainRouter.post('/register', upload.single('avatar'), async(req, res) => {
 
         let img = "";
 
-        console.log(req.body)
-        if (req.body.avatar != 'undefined') {
 
+
+
+        if (req.body.avatar != "undefined") {
             const result = await imgUploadCloud(req, "/users/");
             try {
                 fs.unlinkSync(req.file.path)
@@ -68,7 +69,6 @@ mainRouter.post('/register', upload.single('avatar'), async(req, res) => {
 
             img = result.url;
         }
-
 
         const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, status, BrandID } = req.body;
         const hash = await bcrypt.hash(Password, 10);
@@ -97,11 +97,12 @@ mainRouter.post('/login',
 
             const user = await User.findOne({ username }).exec();
 
+            const id = user.id
             if (!user) throw new Error("wrong user name or password");
             const isMatched = await bcrypt.compare(password, user.Password);
             if (!isMatched) throw new Error("wrong user name or password");
             const token = await jwt.sign({ id: user.id }, "my-signing-secret");
-            res.json({ token });
+            res.json({ token, id });
         } catch (err) {
             res.statusCode = 422;
             res.json({ success: false, message: err.message });
