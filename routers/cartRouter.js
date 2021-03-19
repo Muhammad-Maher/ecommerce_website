@@ -29,10 +29,11 @@ cartRouter.post("/add", async(req, res) => {
 })
 
 
-cartRouter.get('/get', async(req, res) => {
+cartRouter.get('/get/:id', async(req, res) => {
     try {
-        //Nested population        
-        const cart = await Cart.findOne({ userID: req.body.userID }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
+
+        // Nested population
+        const cart = await Cart.findOne({ userID: req.params.id }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
         res.send(cart);
     } catch (error) {
         res.statusCode = 422;
