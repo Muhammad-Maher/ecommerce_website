@@ -10,6 +10,18 @@ const fs = require('fs');
 ////////Base /api/product
 
 
+//get product by id 
+productRouter.get('/one/:id', async(req, res) => {
+    try {
+
+        const product = await Product.findOne({ _id: req.params.id }).populate('resturantID');
+        res.send(product);
+    } catch (error) {
+        res.statusCode = 422;
+        res.send(error);
+    }
+});
+
 /////Allowed for all users
 /**to get all products of brand=>id of the brand  */
 productRouter.get('/:id', async(req, res) => {
@@ -35,6 +47,9 @@ productRouter.get('/:id/:pid', async(req, res) => {
         res.send(error);
     }
 });
+
+
+
 
 productRouter.use(authentication)
 
@@ -62,7 +77,7 @@ productRouter.post('/', upload.single("avatar"), async(req, res) => {
     }
 })
 
-productRouter.patch('/:id/:pid', async(req, res) => {
+productRouter.patch('/:pid', async(req, res) => {
     try {
         const product = await Product.findOne({ _id: req.params.pid }).populate('resturantID')
         const Name1 = req.body.Name || product.Name;

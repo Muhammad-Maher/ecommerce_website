@@ -12,7 +12,7 @@ const jwt = require('jsonwebtoken');
 
 
 
-cartRouter.use(authentication)
+// cartRouter.use(authentication)
 
 cartRouter.post("/add", async(req, res) => {
     try {
@@ -31,8 +31,8 @@ cartRouter.post("/add", async(req, res) => {
 
 cartRouter.get('/get', async(req, res) => {
     try {
-        //Nested population
-        const cart = await Cart.findOne({ userID: "req.body.userID" }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
+        //Nested population        
+        const cart = await Cart.findOne({ userID: req.body.userID }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
         res.send(cart);
     } catch (error) {
         res.statusCode = 422;
