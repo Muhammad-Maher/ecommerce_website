@@ -16,6 +16,7 @@ const imgUploadCloud = require('../middelware/cloudinary');
 const User = require("../models/usersCollection");
 const fs = require('fs');
 const { body, validationResult } = require('express-validator');
+const { request } = require("http");
 
 
 mainRouter.get('/home', async(req, res, next) => {
@@ -50,39 +51,40 @@ mainRouter.get('/about', async(req, res, next) => {
 
 
 
+mainRouter.post('/register', upload.single('avatar'), async(req, res) => {
+    try {
 
+        let img = "";
 
-mainRouter.post('/register',
-    body('username').isLength({ min: 3 })
-    .withMessage('enter valide username with length more than 3'),
-    body('mail').isEmail().withMessage('enter valide email'),
-    upload.single('avatar'), async(req, res, next) => {
-        try {
+        console.log(req.body)
+        if (req.body.avatar != 'undefined') {
 
             const result = await imgUploadCloud(req, "/users/");
-
             try {
                 fs.unlinkSync(req.file.path)
             } catch (err) {
                 console.error(err)
             }
+
             img = result.url;
-
-            const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, status, BrandID } = req.body;
-
-            const hash = await bcrypt.hash(Password, 10);
-            const user = await User.create({ username, Password: hash, mail, gender, fname, lname, Phone, governorater, Address, country, img, status, BrandID });
-
-            res.statusCode = 201;
-            res.send({ message: 'user was registered successfully' });
-        } catch (err) {
-
-            res.statusCode = 422;
-            res.send(err);
-            // next();
         }
 
-    })
+
+        const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, status, BrandID } = req.body;
+        const hash = await bcrypt.hash(Password, 10);
+        const user = await User.create({ username, Password: hash, mail, gender, fname, lname, Phone, governorater, Address, country, img, status, BrandID });
+
+
+        res.statusCode = 201;
+        res.send({ message: 'user was registered successfully' });
+    } catch (err) {
+
+        res.statusCode = 422;
+        res.send(err);
+        // next();
+    }
+
+})
 
 mainRouter.post('/login',
     body('username').isLength({ min: 3 })
@@ -92,7 +94,9 @@ mainRouter.post('/login',
 
 
             const { password, username } = req.body;
+
             const user = await User.findOne({ username }).exec();
+
             if (!user) throw new Error("wrong user name or password");
             const isMatched = await bcrypt.compare(password, user.Password);
             if (!isMatched) throw new Error("wrong user name or password");

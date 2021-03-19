@@ -42,7 +42,6 @@ productRouter.use(manage)
     /////Allowed for Admins only
 productRouter.post('/', upload.single("avatar"), async(req, res) => {
     try {
-
         const result = await imgUploadCloud(req, "/products/");
         try {
             fs.unlinkSync(req.file.path)
@@ -56,7 +55,7 @@ productRouter.post('/', upload.single("avatar"), async(req, res) => {
         const Price = req.body.Price;
         const resturantID = req.body.resturantID;
         const product = await Product.create({ Name, img, status, Price, resturantID });
-        res.json("product created successfully");
+        res.send({ "message": "product created successfully" });
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
