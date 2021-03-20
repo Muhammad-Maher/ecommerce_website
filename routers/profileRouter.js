@@ -17,8 +17,9 @@ profileRouter.get("/:id", authentication, async(req, res, next) => {
 
     try {
 
+
         const userData = await (await User.findOne({ _id: req.params.id }).populate('BrandID'));
-        const userOrders = await Order.find({ userID: req.params.id }).populate("userID").exec();
+        const userOrders = await Order.find({ userID: req.params.id }).populate(['productID', 'userID']).exec();
         res.json({ userData, userOrders });
 
 
