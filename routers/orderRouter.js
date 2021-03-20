@@ -14,13 +14,15 @@ orderRouter.post('/:id', async(req, res) => {
         // const status= req.body.status;
         const total = req.body.total;
         const productID = req.body.productID;
+        const status = req.body.status;
         const userID = req.params.id;
-        const order = await Order.create({ userID, productID, total });
+        const order = await Order.create({ userID, productID, total, status });
         res.send(order);
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
     }
+
 })
 
 orderRouter.get('/:id/:oid', async(req, res) => {
@@ -32,7 +34,7 @@ orderRouter.get('/:id/:oid', async(req, res) => {
         res.send(error);
     }
 });
-////api/order/:id(GET) //all orders
+////api/order/:id(GET) //all orders
 orderRouter.get('/:id', async(req, res) => {
     try {
         const orders = await Order.find({ userID: req.params.id }).populate(['productID', 'userID']);

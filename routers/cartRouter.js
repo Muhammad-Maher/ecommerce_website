@@ -18,9 +18,23 @@ cartRouter.post("/add", async(req, res) => {
     try {
 
         const { userID, productID } = req.body;
-        const cart = await Cart.create({ userID: userID, productID: productID })
+        const Oldcart = await Cart.findOne({ userID }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
+        let products = Oldcart.productID
+            // res.send(products);
+        let cart;
+        if (Oldcart) {
 
-        res.json("cart created successfully");
+            products.push(productID);
+            cart = await Cart.updateOne({ userID: userID }, { productID: products })
+            res.json("cart updated successfully");
+        } else {
+
+            cart = await Cart.create({ userID: userID, productID: productID })
+            res.json("cart created successfully");
+        }
+
+
+
     } catch (error) {
 
         res.statusCode = 422;
