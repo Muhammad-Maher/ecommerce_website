@@ -3,6 +3,7 @@ const Product = require("../models/productsCollection");
 const Resturant = require("../models/resturantsCollection");
 
 const Cart = require("../models/cartsCollection");
+const Order = require("../models/ordersCollection");
 
 
 const Brand = require('../models/brandsCollection');
@@ -11,6 +12,8 @@ const mainRouter = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const authentication = require('../middelware/authontication');
+const managment = require('../middelware/mangement');
+const adminstration = require('../middelware/adminstration');
 const upload = require('../middelware/upload');
 const imgUploadCloud = require('../middelware/cloudinary');
 const User = require("../models/usersCollection");
@@ -124,23 +127,6 @@ mainRouter.post('/search', async(req, res, next) => {
     }
 })
 
-mainRouter.get('/order/all', async(req, res, next) => {
-    try {
-
-
-        const allOrderes = await Product.find({}).populate('resturantID')
-            .exec((err, data) => {
-                res.json(data);
-            })
-
-    } catch (err) {
-
-        res.statusCode = 500;
-        res.json(err);
-        // next();
-    }
-
-})
 
 mainRouter.get('/product/offers', async(req, res, next) => {
     try {
@@ -158,4 +144,49 @@ mainRouter.get('/product/offers', async(req, res, next) => {
     }
 
 })
+
+
+mainRouter.get('/product/all', async(req, res, next) => {
+    try {
+
+
+
+        const allproducts = await Product.find({}).populate('resturantID')
+            .exec((err, data) => {
+                res.json(data);
+            })
+
+    } catch (err) {
+
+        res.statusCode = 500;
+        res.json(err);
+        // next();
+    }
+
+})
+
+mainRouter.use(authentication)
+mainRouter.use(adminstration)
+
+mainRouter.get('/order/all', async(req, res, next) => {
+    try {
+
+
+        const allOrders = await Order.find({}).populate(['productID', 'userID'])
+            .exec((err, data) => {
+                res.json(data);
+            })
+
+    } catch (err) {
+
+        res.statusCode = 500;
+        res.json(err);
+        // next();
+    }
+
+})
+
+
+
+
 module.exports = mainRouter;
