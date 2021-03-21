@@ -37,12 +37,12 @@ app.use(express.json());
 app.use(express.static('public'));
 
 app.use("/api/", mainRouter);
+app.use('/api/user/profile', profileRouter);
 app.use('/api/user', userRouter);
 app.use('/api/brand', brandRouter);
 app.use('/api/product', productRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/resturant', ResturantRouter);
-app.use('/api/user/profile', profileRouter);
 app.use('/api/cart', cartRouter);
 
 app.listen(port, () => {

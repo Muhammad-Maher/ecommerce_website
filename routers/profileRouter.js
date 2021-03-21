@@ -10,12 +10,13 @@ const mangement = require('../middelware/mangement');
 const { reset } = require('nodemon');
 
 profileRouter.use(authentication)
-    /////Allowed for all users
+
+/////Allowed for all users
 
 
-profileRouter.get("/:id", authentication, async(req, res, next) => {
-
+profileRouter.get("/:id", async(req, res, next) => {
     try {
+
 
 
         const userData = await (await User.findOne({ _id: req.params.id }).populate('BrandID'));
@@ -89,7 +90,7 @@ profileRouter.delete("/:id", authentication, async(req, res, next) => {
 })
 
 
-profileRouter.use(mangement)
-    ///Allowed for Admins only
+// profileRouter.use(mangement)
+///Allowed for Admins only
 
 module.exports = profileRouter;

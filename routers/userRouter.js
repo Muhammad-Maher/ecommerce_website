@@ -20,6 +20,8 @@ userRouter.use(authentication)
 userRouter.get("/all", async(req, res, next) => {
 
     try {
+        conssole.log("here")
+
 
         const usersData = await User.find({});
         res.send(usersData);
