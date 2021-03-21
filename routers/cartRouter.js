@@ -17,22 +17,21 @@ const jwt = require('jsonwebtoken');
 cartRouter.post("/add", async(req, res) => {
     try {
 
-        // console.log(req.body);
+        console.log(req.body);
         // res.send("here")
 
         const { userID, productID } = req.body;
         const Oldcart = await Cart.findOne({ userID }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
-        let products = Oldcart.productID
-            // res.send(products);
+        // res.send(products);
         let cart;
         if (Oldcart) {
-
+            let products = Oldcart.productID
             products.push(productID);
             cart = await Cart.updateOne({ userID: userID }, { productID: products })
             res.json("cart updated successfully");
         } else {
 
-            cart = await Cart.create({ userID: userID, productID: productID })
+            cart = await Cart.create({ userID: userID, productID: [productID] })
             res.json("cart created successfully");
         }
 
