@@ -112,9 +112,8 @@ mainRouter.post('/login',
 
 mainRouter.post('/search', async(req, res, next) => {
     try {
-
         const { searchWord } = req.body;
-        const searchResult = Product.find({ "Name": { $regex: searchWord } })
+        const searchResult = Product.find({ "Name": { $regex: searchWord } }).populate("resturantID")
             .exec((err, data) => {
                 res.json(data);
             })
