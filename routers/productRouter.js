@@ -100,10 +100,10 @@ productRouter.patch('/:pid', async(req, res) => {
     }
 })
 
-productRouter.delete('/:id/:pid', async(req, res) => {
+productRouter.delete('/:pid', async(req, res) => {
     try {
         const products = await Product.deleteOne({ _id: req.params.pid });
-        res.send(products);
+        res.send("product removed successfully");
     } catch (error) {
         res.statusCode = 422;
         res.send(error);

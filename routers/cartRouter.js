@@ -17,6 +17,9 @@ const jwt = require('jsonwebtoken');
 cartRouter.post("/add", async(req, res) => {
     try {
 
+        // console.log(req.body);
+        // res.send("here")
+
         const { userID, productID } = req.body;
         const Oldcart = await Cart.findOne({ userID }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
         let products = Oldcart.productID
@@ -49,6 +52,28 @@ cartRouter.get('/get/:id', async(req, res) => {
         // Nested population
         const cart = await Cart.findOne({ userID: req.params.id }).populate([{ path: 'productID', populate: ('resturantID') }, 'userID']);
         res.send(cart);
+    } catch (error) {
+        res.statusCode = 422;
+        res.send(error);
+    }
+});
+
+cartRouter.delete('/remove/:userID/:productID/:index', async(req, res) => {
+    try {
+
+        const { userID, productID, index } = req.params;
+
+        // console.log(req.params)
+        // res.send("here")
+
+        const Oldcart = await Cart.findOne({ userID });
+        let products = Oldcart.productID
+            // products = products.filter(item => item !== productID);
+        products.splice(index, 1);
+        // res.send(products)
+        const cart = await Cart.updateOne({ userID: userID }, { productID: products });
+        res.json("product removed successfully");
+
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
