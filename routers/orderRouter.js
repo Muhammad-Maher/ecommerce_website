@@ -1,6 +1,7 @@
 const express = require('express');
 const orderRouter = new express.Router();
 const Order = require('../models/ordersCollection');
+const User = require('../models/usersCollection');
 const authentication = require('../middelware/authontication');
 const aminstration = require('../middelware/adminstration');
 const fs = require('fs');
@@ -49,14 +50,17 @@ orderRouter.delete('/:id/:oid', async(req, res) => {
     try {
         const orders = await Order.findOne({ _id: req.params.oid }).populate(['productID', 'userID']);
         if (orders.status === 'pending') {
+
             const order = await Order.deleteOne({ _id: req.params.oid }).populate(['productID', 'userID']);
-            res.send(order);
+            res.json("deleted successfully");
             return;
         } else {
             const user = await User.findOne({ _id: req.signedData.id }).populate(['productID', 'userID']);
+
             if (user.status === "admin") {
+
                 const order = await Order.deleteOne({ _id: req.params.oid });
-                res.send(order);
+                res.json("deleted successfully");
                 return;
             } else {
                 throw new Error('Not Allowed');
