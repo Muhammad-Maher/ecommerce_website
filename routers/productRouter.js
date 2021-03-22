@@ -10,9 +10,11 @@ const fs = require('fs');
 ////////Base /api/product
 
 
+
 //get product by id 
 productRouter.get('/one/:id', async(req, res) => {
     try {
+
 
         const product = await Product.findOne({ _id: req.params.id }).populate('resturantID');
         res.send(product);
@@ -54,7 +56,8 @@ productRouter.get('/:id/:pid', async(req, res) => {
 productRouter.use(authentication)
 
 productRouter.use(manage)
-    /////Allowed for Admins only
+
+/////Allowed for Admins only
 productRouter.post('/', upload.single("avatar"), async(req, res) => {
     try {
         const result = await imgUploadCloud(req, "/products/");
@@ -77,9 +80,12 @@ productRouter.post('/', upload.single("avatar"), async(req, res) => {
     }
 })
 
+
+
 productRouter.patch('/:pid', async(req, res) => {
     try {
         const product = await Product.findOne({ _id: req.params.pid }).populate('resturantID')
+            // console.log(req.body)
         const Name1 = req.body.Name || product.Name;
         const img1 = req.body.img || product.img;
         const status1 = req.body.status || product.status || "NaN";
@@ -93,15 +99,20 @@ productRouter.patch('/:pid', async(req, res) => {
             }
 
         });
-        res.send(updatedProduct)
+
+        res.json("product updated successfully")
     } catch (error) {
         res.statusCode = 422;
         res.send(error);
     }
 })
 
+
+// productRouter.use((req, res) => { console.log("here") })
+
 productRouter.delete('/:pid', async(req, res) => {
     try {
+
         const products = await Product.deleteOne({ _id: req.params.pid });
         res.send("product removed successfully");
     } catch (error) {

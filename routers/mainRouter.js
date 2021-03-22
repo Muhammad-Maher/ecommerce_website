@@ -22,6 +22,8 @@ const { body, validationResult } = require('express-validator');
 const { request } = require("http");
 
 
+
+
 mainRouter.get('/home', async(req, res, next) => {
 
     try {
@@ -132,6 +134,7 @@ mainRouter.get('/product/offers', async(req, res, next) => {
     try {
 
 
+
         const allOffers = await Product.find({ "status": "sale" }).populate('resturantID')
             .exec((err, data) => {
                 res.json(data);
@@ -165,11 +168,11 @@ mainRouter.get('/product/all', async(req, res, next) => {
 
 })
 
-mainRouter.use(authentication)
-mainRouter.use(adminstration)
 
-mainRouter.get('/order/all', async(req, res, next) => {
+
+mainRouter.get('/order/all', authentication, adminstration, async(req, res, next) => {
     try {
+
 
 
         const allOrders = await Order.find({}).populate(['productID', 'userID'])

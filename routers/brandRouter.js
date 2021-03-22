@@ -13,9 +13,11 @@ const fs = require('fs');
 
 ////////Base /api/brand
 
-brandRouter.use(authentication)
-    /////Allowed for all users
-brandRouter.get('/:id', async(req, res) => {
+// brandRouter.use(authentication)
+/////Allowed for all users
+
+
+brandRouter.get('/:id', authentication, async(req, res) => {
     try {
         const brand = await Brand.findOne({ _id: req.params.id }, { _id: 0 });
         res.send("brand created successfully");
@@ -25,11 +27,11 @@ brandRouter.get('/:id', async(req, res) => {
     }
 })
 
-brandRouter.use(adminstration)
-    /////Allowed for Admins only
+// brandRouter.use(adminstration)
+/////Allowed for Admins only
 
 
-brandRouter.post('/',
+brandRouter.post('/', authentication, adminstration,
     body('Name').isLength({ min: 3 })
     .withMessage('enter valide name with length more than 3'),
     body('mail').isEmail().withMessage('enter valide email'),
@@ -55,7 +57,7 @@ brandRouter.post('/',
             res.send(error);
         }
     });
-brandRouter.patch('/:id',
+brandRouter.patch('/:id', authentication, adminstration,
     body('Name').isLength({ min: 3 })
     .withMessage('enter valide name with length more than 3'),
     body('mail').isEmail().withMessage('enter valide email'),
@@ -94,7 +96,7 @@ brandRouter.patch('/:id',
         }
     })
 
-brandRouter.delete('/:id', adminstration, async(req, res) => {
+brandRouter.delete('/:id', authentication, adminstration, adminstration, async(req, res) => {
     try {
         const products = await Product.deleteMany({ BrandID: req.params.id });
         const brand = await Brand.deleteOne({ _id: req.params.id });

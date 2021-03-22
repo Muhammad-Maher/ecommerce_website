@@ -1,7 +1,7 @@
 const User = require('../models/usersCollection');
 module.exports = async(req, res, next) => {
     try {
-        // console.log("here")
+
         const user = await User.findOne({ _id: req.signedData.id });
         if (user.status === "admin") {
             next();
