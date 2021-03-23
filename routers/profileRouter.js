@@ -8,6 +8,8 @@ const authentication = require('../middelware/authontication');
 const adminstration = require('../middelware/adminstration');
 const mangement = require('../middelware/mangement');
 const { reset } = require('nodemon');
+const { UploadStream } = require('cloudinary');
+const { Upload } = require('../middelware/upload');
 
 profileRouter.use(authentication)
 
@@ -34,11 +36,12 @@ profileRouter.get("/:id", async(req, res, next) => {
 profileRouter.patch("/:id", authentication, async(req, res, next) => {
 
     try {
-        const userData = await (await User.findOne({ _id: req.params.id }));
 
-        // const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, img, BrandID } = userData;
 
-        // const { username, Password, mail, gender, fname, lname, Phone, governorater, Address, country, img, BrandID } = req.body;
+        const userData = await User.findOne({ _id: req.params.id });
+
+
+
 
         const username = req.body.username || userData.username;
         const mail = req.body.mail || userData.mail;
@@ -49,8 +52,8 @@ profileRouter.patch("/:id", authentication, async(req, res, next) => {
         const governorater = req.body.governorater || userData.governorater;
         const Address = req.body.Address || userData.Address;
         const country = req.body.country || userData.country;
-        const img = req.body.img || userData.img;
-        const BrandID = req.body.BrandID || userData.BrandID;
+        // const img = req.body.img || userData.img;
+        // const BrandID = req.body.BrandID || userData.BrandID;
 
 
 
@@ -62,7 +65,8 @@ profileRouter.patch("/:id", authentication, async(req, res, next) => {
             status = req.body.status || userData.status;
         }
 
-        const userUpdateData = await User.updateOne({ _id: req.params.id }, { username, mail, gender, fname, lname, Phone, governorater, Address, country, img, status, BrandID });
+        const userUpdateData = await User.updateOne({ _id: req.params.id }, { "username": username, "mail": mail, "fname": fname, "lname": lname, "Phone": Phone, "governorater": governorater, "Address": Address, "country": country });
+
 
         res.json({ message: "Updated successfully" });
 
